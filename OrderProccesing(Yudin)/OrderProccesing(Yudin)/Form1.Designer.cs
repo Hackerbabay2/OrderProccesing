@@ -73,6 +73,9 @@ namespace OrderProccesing_Yudin_
             this.label13 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.normHourNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.countMaterialsNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.priceMaterialsNumeric)).BeginInit();
@@ -98,7 +101,7 @@ namespace OrderProccesing_Yudin_
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(533, 12);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(576, 535);
+            this.listView1.Size = new System.Drawing.Size(576, 367);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -358,6 +361,11 @@ namespace OrderProccesing_Yudin_
             // 
             // wageRateNumeric
             // 
+            this.wageRateNumeric.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             this.wageRateNumeric.Location = new System.Drawing.Point(12, 126);
             this.wageRateNumeric.Maximum = new decimal(new int[] {
             2147483647,
@@ -447,12 +455,45 @@ namespace OrderProccesing_Yudin_
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.buttonRemove_Click);
             // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(390, 356);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(137, 23);
+            this.button6.TabIndex = 39;
+            this.button6.Text = "Сохранить";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(390, 327);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(137, 23);
+            this.button7.TabIndex = 40;
+            this.button7.Text = "Загрузить";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(390, 300);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(137, 23);
+            this.button8.TabIndex = 41;
+            this.button8.Text = "Очистить";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1121, 559);
+            this.ClientSize = new System.Drawing.Size(1121, 392);
+            this.Controls.Add(this.button8);
+            this.Controls.Add(this.button7);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.label13);
@@ -544,6 +585,9 @@ namespace OrderProccesing_Yudin_
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
     }
 }
 

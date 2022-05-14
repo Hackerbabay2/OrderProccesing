@@ -7,22 +7,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Xml.Serialization;
+using System.Xml;
+using System.IO;
+    
 namespace OrderProccesing_Yudin_
 {
     public partial class Form1 : Form
     {
         private DataBase _dataBase;
+        Orders _orders;
+        private string _xmlPath = "xmlData.xml";
 
         public Form1()
         {
             InitializeComponent();
             _dataBase = new DataBase();
+            _orders = new Orders();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
@@ -100,21 +105,98 @@ namespace OrderProccesing_Yudin_
         {
             _dataBase.RemoveOrderAt((int)idNumeric.Value);
         }
+
+        private void SerializeXML(Orders orders)
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Orders));
+
+            using (FileStream fileStream = new FileStream(_xmlPath, FileMode.OpenOrCreate))
+            {
+                xmlSerializer.Serialize(fileStream,orders);
+            }
+        }
+
+        private Orders DeseriacliezeXml()
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Orders));
+
+            using (FileStream fileStream = new FileStream(_xmlPath, FileMode.OpenOrCreate))
+            {
+                return (Orders)xmlSerializer.Deserialize(fileStream);
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if (File.Exists(_xmlPath))
+                File.Delete(_xmlPath);
+            _orders.OrdersList = _dataBase.Orders;
+            SerializeXML(_orders);
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (File.Exists(_xmlPath))
+            {
+                DialogResult result = MessageBox.Show(
+                    "При загрузке данных, не сохраненные данные удаляются!\nПродолжить?",
+                    "ВНИМАНИЕ",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly
+                    );
+
+                if (result == DialogResult.Yes)
+                {
+                    listView1.Items.Clear();
+                    Orders orders = DeseriacliezeXml();
+                    _dataBase.SetOrders(orders.OrdersList);
+                    _dataBase.ShowData(listView1);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Ничего не сохраннено");
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(
+                "Удалить все сохраненные данные?",
+                "ВНИМАНИЕ",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Information,
+                MessageBoxDefaultButton.Button1,
+                MessageBoxOptions.DefaultDesktopOnly
+                );
+
+            if (result == DialogResult.Yes)
+            {
+                File.Delete(_xmlPath);
+            }
+        }
     }
 
-    class DataBase
+    [Serializable]
+    public class DataBase
     {
         private List<Order> _orders;
-        private List<Order> _findOrders;
 
+        public List<Order> Orders => _orders;
         public int CountOrders => _orders.Count;
 
         public DataBase()
         {
             _orders = new List<Order>();
-            _findOrders = new List<Order>();
         }
         
+        public void SetOrders(List<Order> orders)
+        {
+            _orders = orders;
+        }
+
         public Order GetOrderByIndex(int index)
         {
             return _orders[index - 1];
@@ -124,9 +206,10 @@ namespace OrderProccesing_Yudin_
         {
             foreach (Order order in _orders)
             {
-                if (order.Id == index)
+                if (order._id == index)
                 {
                     _orders.Remove(order);
+  
                     return;
                 }
             }
@@ -140,29 +223,29 @@ namespace OrderProccesing_Yudin_
 
             for (int i = 0; i < _orders.Count; i++)
             {
-                if (_orders[i].Id.ToString() == attribute)
+                if (_orders[i]._id.ToString() == attribute)
                     items.Add(GetDataByIndex(i));
-                else if (_orders[i].FullName.ToLower().Contains(attribute.ToLower()))
+                else if (_orders[i]._fullName.ToLower().Contains(attribute.ToLower()))
                     items.Add(GetDataByIndex(i));
-                else if (_orders[i].Department.ToLower().Contains(attribute.ToLower()))
+                else if (_orders[i]._department.ToLower().Contains(attribute.ToLower()))
                     items.Add(GetDataByIndex(i));
-                else if (_orders[i].CountMaterials.ToString() == attribute)
+                else if (_orders[i]._countMaterials.ToString() == attribute)
                     items.Add(GetDataByIndex(i));
-                else if (_orders[i].InStock.ToLower().Contains(attribute.ToLower()))
+                else if (_orders[i]._inStock.ToLower().Contains(attribute.ToLower()))
                     items.Add(GetDataByIndex(i));
-                else if (_orders[i].NormHour.ToString() == attribute)
+                else if (_orders[i]._normHour.ToString() == attribute)
                     items.Add(GetDataByIndex(i));
-                else if (_orders[i].PhoneNumber.ToLower().Contains(attribute.ToLower()))
+                else if (_orders[i]._phoneNumber.ToLower().Contains(attribute.ToLower()))
                     items.Add(GetDataByIndex(i));
-                else if (_orders[i].PriceMaterials.ToString() == attribute)
+                else if (_orders[i]._priceMaterials.ToString() == attribute)
                     items.Add(GetDataByIndex(i));
-                else if (_orders[i].Responsible.ToLower().Contains(attribute.ToLower()))
+                else if (_orders[i]._responsible.ToLower().Contains(attribute.ToLower()))
                     items.Add(GetDataByIndex(i));
-                else if (_orders[i].Materials.ToLower().Contains(attribute.ToLower()))
+                else if (_orders[i]._consumableMaterials.ToLower().Contains(attribute.ToLower()))
                     items.Add(GetDataByIndex(i));
-                else if (_orders[i].Equipments.ToLower().Contains(attribute.ToLower()))
+                else if (_orders[i]._equipments.ToLower().Contains(attribute.ToLower()))
                     items.Add(GetDataByIndex(i));
-                else if (_orders[i].WageRate.ToString() == attribute)
+                else if (_orders[i]._wageRate.ToString() == attribute)
                     items.Add(GetDataByIndex(i));
             }
 
@@ -179,18 +262,18 @@ namespace OrderProccesing_Yudin_
             ListViewItem items = null;
 
             items = new ListViewItem(new string[]{
-                _orders[index].Id.ToString(),
-                _orders[index].FullName,
-                _orders[index].Department,
-                _orders[index].PhoneNumber,
-                _orders[index].NormHour.ToString(),
-                _orders[index].WageRate.ToString(),
-                _orders[index].Responsible,
-                _orders[index].Equipments,
-                _orders[index].Materials,
-                _orders[index].CountMaterials.ToString(),
-                _orders[index].PriceMaterials.ToString(),
-                _orders[index].InStock
+                _orders[index]._id.ToString(),
+                _orders[index]._fullName,
+                _orders[index]._department,
+                _orders[index]._phoneNumber,
+                _orders[index]._normHour.ToString(),
+                _orders[index]._wageRate.ToString(),
+                _orders[index]._responsible,
+                _orders[index]._equipments,
+                _orders[index]._consumableMaterials,
+                _orders[index]._countMaterials.ToString(),
+                _orders[index]._priceMaterials.ToString(),
+                _orders[index]._inStock
             });
 
             return items;
@@ -216,79 +299,29 @@ namespace OrderProccesing_Yudin_
 
         public void ShowData(ListView listView)
         {
-            ListViewItem items = null;
+            ListViewItem itemsViewItem = null;
 
             foreach (Order order in _orders)
             {
-                items = new ListViewItem(new string[] {
-                       order.Id.ToString(),
-                       order.FullName,
-                       order.Department,
-                       order.PhoneNumber,
-                       order.NormHour.ToString(),
-                       order.WageRate.ToString(),
-                       order.Responsible,
-                       order.Equipments,
-                       order.Materials,
-                       order.CountMaterials.ToString(),
-                       order.PriceMaterials.ToString(),
-                       order.InStock
+                itemsViewItem = new ListViewItem(new string[] {
+                       order._id.ToString(),
+                       order._fullName,
+                       order._department,
+                       order._phoneNumber,
+                       order._normHour.ToString(),
+                       order._wageRate.ToString(),
+                       order._responsible,
+                       order._equipments,
+                       order._consumableMaterials,
+                       order._countMaterials.ToString(),
+                       order._priceMaterials.ToString(),
+                       order._inStock
                 });
-                listView.Items.Add(items);
+                listView.Items.Add(itemsViewItem);
             }
         }
     }
-
-    public class Order
-    {
-        private int _id;
-        private string _fullName;
-        private string _department;
-        private string _phoneNumber;
-        private int _normHour;
-        private int _wageRate;
-        private string _responsible;
-        private string _equipments;
-        private string _consumableMaterials;
-        private int _countMaterials;
-        private int _priceMaterials;
-        private string _inStock;
-
-        public int Id => _id;
-        public string FullName => _fullName;
-        public string Department => _department;
-        public string PhoneNumber => _phoneNumber;
-        public int NormHour => _normHour;
-        public int WageRate => _wageRate;
-        public string Responsible => _responsible;
-        public int PriceMaterials => _priceMaterials;
-        public string InStock => _inStock;
-        public int CountMaterials => _countMaterials;
-        public string Equipments => _equipments;
-        public string Materials => _consumableMaterials;
-
-        public Order(int id,string fullName,string department, string phoneNumber, int normHour, int wageRate, string responsible,string equipments, string materials, int priceMaterials,int countMaterials, string inStock)
-        {
-            _id = id;
-            SetData(fullName,department,phoneNumber,normHour,wageRate,responsible,equipments,materials,priceMaterials,countMaterials,inStock);
-        }
-
-        public void SetData(string fullName, string department, string phoneNumber, int normHour, int wageRate, string responsible, string equipments, string materials, int priceMaterials, int countMaterials, string inStock)
-        {
-            _equipments = equipments;
-            _consumableMaterials = materials;
-            _fullName = fullName;
-            _department = department;
-            _phoneNumber = phoneNumber;
-            _normHour = normHour;
-            _wageRate = wageRate;
-            _responsible = responsible;
-            _priceMaterials = priceMaterials;
-            _countMaterials = countMaterials;
-            _inStock = inStock;
-        }
-    }
-
+    
     class Equipment
     {
         private string _name;

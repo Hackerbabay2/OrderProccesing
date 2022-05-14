@@ -61,6 +61,7 @@
     <Compile Include="Redactor.Designer.cs">
       <DependentUpon>Redactor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Orders.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

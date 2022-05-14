@@ -18,6 +18,7 @@ namespace OrderProccesing_Yudin_
         private DataBase _dataBase;
         Orders _orders;
         private string _xmlPath = "xmlData.xml";
+        private string _foundDataPath = "foundData.txt";
 
         public Form1()
         {
@@ -28,6 +29,10 @@ namespace OrderProccesing_Yudin_
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (!File.Exists(_foundDataPath))
+            {
+                File.Create(_foundDataPath).Close();
+            }
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
@@ -74,7 +79,7 @@ namespace OrderProccesing_Yudin_
             if (_dataBase.CountOrders > 0)
             {
                 listView1.Items.Clear();
-                _dataBase.ShowDataByAttribute(listView1,searchBox.Text);
+                _dataBase.ShowDataByAttribute(listView1,searchBox.Text, _foundDataPath);
             }
             else
             {
@@ -217,39 +222,94 @@ namespace OrderProccesing_Yudin_
             MessageBox.Show("Id не найден");
         }
 
-        public List<ListViewItem> GetItemsByAttribute(string attribute)
+        public List<ListViewItem> GetItemsByAttribute(string attribute, string path)
         {
             List<ListViewItem> items = new List<ListViewItem>();
+            string data = null;
 
             for (int i = 0; i < _orders.Count; i++)
             {
                 if (_orders[i]._id.ToString() == attribute)
+                {
                     items.Add(GetDataByIndex(i));
+                    data += AddData(_orders[i]);
+                }
                 else if (_orders[i]._fullName.ToLower().Contains(attribute.ToLower()))
+                {
                     items.Add(GetDataByIndex(i));
+                    data += AddData(_orders[i]);
+                }
                 else if (_orders[i]._department.ToLower().Contains(attribute.ToLower()))
+                {
                     items.Add(GetDataByIndex(i));
+                    data += AddData(_orders[i]);
+                }
                 else if (_orders[i]._countMaterials.ToString() == attribute)
+                {
                     items.Add(GetDataByIndex(i));
+                    data += AddData(_orders[i]);
+                }
                 else if (_orders[i]._inStock.ToLower().Contains(attribute.ToLower()))
+                {
                     items.Add(GetDataByIndex(i));
+                    data += AddData(_orders[i]);
+                }
                 else if (_orders[i]._normHour.ToString() == attribute)
+                {
                     items.Add(GetDataByIndex(i));
+                    data += AddData(_orders[i]);
+                }
                 else if (_orders[i]._phoneNumber.ToLower().Contains(attribute.ToLower()))
+                {
                     items.Add(GetDataByIndex(i));
+                    data += AddData(_orders[i]);
+                }
                 else if (_orders[i]._priceMaterials.ToString() == attribute)
+                {
                     items.Add(GetDataByIndex(i));
+                    data += AddData(_orders[i]);
+                }
                 else if (_orders[i]._responsible.ToLower().Contains(attribute.ToLower()))
+                {
                     items.Add(GetDataByIndex(i));
+                    data += AddData(_orders[i]);
+                }
                 else if (_orders[i]._consumableMaterials.ToLower().Contains(attribute.ToLower()))
+                {
                     items.Add(GetDataByIndex(i));
+                    data += AddData(_orders[i]);
+                }
                 else if (_orders[i]._equipments.ToLower().Contains(attribute.ToLower()))
+                {
                     items.Add(GetDataByIndex(i));
+                    data += AddData(_orders[i]);
+                }
                 else if (_orders[i]._wageRate.ToString() == attribute)
+                {
                     items.Add(GetDataByIndex(i));
+                    data += AddData(_orders[i]);
+                }
             }
 
+            File.WriteAllText(path,data);
             return items;
+        }
+
+        public string AddData(Order order)
+        {
+            string data = $"{order._id} " +
+                $"{order._fullName} " +
+                $"{order._department} " +
+                $"{order._phoneNumber} " +
+                $"{order._normHour} " +
+                $"{order._wageRate} " +
+                $"{order._responsible} " +
+                $"{order._equipments} " +
+                $"{order._consumableMaterials} " +
+                $"{order._countMaterials} " +
+                $"{order._priceMaterials} " +
+                $"{order._inStock}\n";
+            return data;
         }
 
         public void AddOrder(string fullName, string department, string phoneNumber, int normHour, int wageRate, string responsible, int priceMaterials,int countMaterials, string inStock, string equipment, string material)
@@ -279,9 +339,10 @@ namespace OrderProccesing_Yudin_
             return items;
         }
 
-        public void ShowDataByAttribute(ListView listView, string attribute)
+        public void ShowDataByAttribute(ListView listView, string attribute, string path)
         {
-            List<ListViewItem> listViewItems = GetItemsByAttribute(attribute);
+            List<ListViewItem> listViewItems = GetItemsByAttribute(attribute,path);
+            string data = null;
 
             if (listViewItems.Count != 0)
             {

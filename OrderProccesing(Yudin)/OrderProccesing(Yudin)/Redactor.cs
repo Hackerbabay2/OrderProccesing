@@ -52,17 +52,17 @@ namespace OrderProccesing_Yudin_
 
         private void Redactor_Load(object sender, EventArgs e)
         {
-            fullNameBox.Text = _order._fullName;
-            departmentBox.Text = _order._department;
-            phoneNumberMaskBox.Text = _order._phoneNumber;
-            normHourNumeric.Value = _order._normHour;
-            wageRateNumeric.Value = _order._wageRate;
-            responsibleBox.Text = _order._responsible;
-            necessaryEquipmentBox.Text = _order._equipments;
-            conumableMaterialsBox.Text = _order._consumableMaterials;
-            countMaterialsNumeric.Value = _order._countMaterials;
-            priceMaterialsNumeric.Value = _order._priceMaterials;
-            avaliabilityComboBox.Text = _order._inStock;
+            fullNameBox.Text = _order.FullName;
+            departmentBox.Text = _order.Department;
+            phoneNumberMaskBox.Text = _order.PhoneNumber;
+            normHourNumeric.Value = _order.NormHour;
+            wageRateNumeric.Value = _order.WageRate;
+            responsibleBox.Text = _order.Responsible;
+            necessaryEquipmentBox.Text = _order.Equipments;
+            conumableMaterialsBox.Text = _order.ConsumableMaterials;
+            countMaterialsNumeric.Value = _order.CountMaterials;
+            priceMaterialsNumeric.Value = _order.PriceMaterials;
+            avaliabilityComboBox.Text = _order.InStock;
         }
     }
 }
